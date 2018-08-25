@@ -1,0 +1,28 @@
+#Configuraçao para repositorio git
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/WalmirRocha/spring-boot/tree/master/config-server
+          
+SPRING_PROFILES_ACTIVE: native     
+
+#configuraçao para repositorio fileSystem
+#spring:
+#  application:
+#    name: config-service
+#  cloud:
+#    config:
+#      server:
+#        git:
+#          uri: https://github.com/WalmirRocha/spring-boot/tree/master/config-server
+
+server:
+  port: 8888
+  
+security:
+  basic:
+    enabled: false

@@ -1,0 +1,6 @@
+configuration:  
+  projectName: config-client
+server:
+  port: 8000
+message:
+  greeting: Hello from the configuration! GIT updated - v2 - v3
