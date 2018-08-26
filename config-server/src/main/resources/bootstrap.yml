@@ -12,7 +12,3 @@ spring:
           force-pull: true
 
 SPRING_PROFILES_ACTIVE: native     
-  
-security:
-  basic:
-    enabled: false
