@@ -5,6 +5,7 @@ spring:
   cloud:
     config:
       server:
+<<<<<<< HEAD
         git:
           uri: https://github.com/WalmirRocha/spring-boot/tree/master/config-server
           
@@ -19,6 +20,22 @@ SPRING_PROFILES_ACTIVE: native
 #      server:
 #        git:
 #          uri: https://github.com/WalmirRocha/spring-boot/tree/master/config-server
+=======
+        native:
+          searchLocations: file:///home/walmir/eclipse-workspace/config-server/config-repo/
+          
+SPRING_PROFILES_ACTIVE: native     
+
+#configuraçao para repositorio fileSystem
+#spring:
+#  application:
+#    name: config-service
+#  cloud:
+#    config:
+#      server:
+#        git:
+#          uri: https://github.com/salerno-rafael/config-repo
+>>>>>>> branch 'master' of https://github.com/WalmirRocha/spring-boot.git
 
 server:
   port: 8888
