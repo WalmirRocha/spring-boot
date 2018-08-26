@@ -1,14 +1,12 @@
-spring:  
+spring:
   application:
-    name: sample
-  profiles: 
+    name: config-client
   cloud:
     config:
-      name: config-client-dev #nome do arquivo é aki
       uri: http://localhost:8888
-     
-      
-management: 
+management:
   security:
     enabled: false
-    
+
+server:
+  port: 8000

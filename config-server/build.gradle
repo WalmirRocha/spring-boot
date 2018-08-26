@@ -31,18 +31,9 @@ ext {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
-<<<<<<< HEAD
-	compile('org.springframework.boot:spring-boot-starter-tomcat')
 	compile('org.springframework.cloud:spring-cloud-config-server')
-
-=======
-	compile('org.springframework.cloud:spring-cloud-config-server')
-
-	compile ('org.springframework.boot:spring-boot-starter-actuator')
->>>>>>> branch 'master' of https://github.com/WalmirRocha/spring-boot.git
 	compile('io.springfox:springfox-swagger2:2.6.1')
 	compile('io.springfox:springfox-swagger-ui:2.6.1')
-
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
