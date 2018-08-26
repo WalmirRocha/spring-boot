@@ -12,24 +12,26 @@ import org.springframework.web.bind.annotation.RestController;
 @Component
 @RefreshScope
 @RestController
-public class Greeter {
+public class ConfigServerController {
 
-	 @Value("${message.greeting:walmirl}")
-	    String greeting;
+	 	@Value("${host.ip:defaut}")
+	    String hostIp;
 
-	    @Value("${server.port:8080}")
+	    @Value("${server.port:-1}")	    
 	    int port;
 
-	    @Value("${configuration.projectName:local}")
+	    @Value("${configuration.projectName:defaut}")
 	    String projectName;
 
 	    @RequestMapping(value = "/", produces = "application/json")
 	    public List<String> index(){
 	        List<String> env = Arrays.asList(
-	                "message.greeting is: " + greeting,
+	                "host.ip is: " + hostIp,
 	                "server.port is: " + port,
 	                "configuration.projectName is: " + projectName
 	        );
 	        return env;
 	    }
+	    
+	    
 }
