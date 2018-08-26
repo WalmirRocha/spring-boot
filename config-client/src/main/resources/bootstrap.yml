@@ -4,9 +4,16 @@ spring:
   cloud:
     config:
       uri: http://localhost:8888
-management:
-  security:
-    enabled: false
 
 server:
   port: 8000
+
+endpoints:
+  refresh:
+    enabled: true
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
