@@ -1,0 +1,11 @@
+db.teste.insert({ "_id" : 1, "domainName" : "test1.com", "hosting" : "hostgator.com" });
+db.teste.insert({ "_id" : 2, "domainName" : "test2.com", "hosting" : "aws.amazon.com"});
+db.teste.insert({ "_id" : 3, "domainName" : "test3.com", "hosting" : "aws.amazon.com" });
+db.teste.insert({ "_id" : 4, "domainName" : "test4.com", "hosting" : "hostgator.com" });
+db.teste.insert({ "_id" : 5, "domainName" : "test5.com", "hosting" : "aws.amazon.com" });
+db.teste.insert({ "_id" : 6, "domainName" : "test6.com", "hosting" : "cloud.google.com" });
+db.teste.insert({ "_id" : 7, "domainName" : "test7.com", "hosting" : "aws.amazon.com" });
+db.teste.insert({ "_id" : 8, "domainName" : "test8.com", "hosting" : "hostgator.com" });
+db.teste.insert({ "_id" : 9, "domainName" : "test9.com", "hosting" : "cloud.google.com" });
+db.teste.insert({ "_id" : 10, "domainName" : "test10.com", "hosting" : "godaddy.com" });
+db.teste.insert({ "_id" : 100, "domainName" : "test10.com", "hosting" : "godaddy.com" });
