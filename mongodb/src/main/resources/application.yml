@@ -1,7 +1,9 @@
 spring:
   data:
     mongodb:
-      host: localhost
+      uri: "mongodb://localhost:27017"
+      authentication-database: admin    
+      host: mongolocalhost
       port: 27017
       database: teste
       password: admin
