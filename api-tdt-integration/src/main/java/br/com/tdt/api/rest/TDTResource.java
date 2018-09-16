@@ -23,8 +23,8 @@ public class TDTResource {
 	private TDTEngine engine;
 
 	/**
-	 * 	Hexadeciaml : 30700048440663802E185523
-	 *  Binary: 00110000 011 100 000000000001001000010001-00000001100110010000000000000101110000110000101010100100011
+	 * 	Hexadeciaml : 3074257bf7194e4000001a85
+	 *  Binary: 001100000111010000100101011110111111011100011001010011100100000000000000000000000001101010000101
    
 	 *  Cabeçalho, que é de 8 bits e é comum para todas as tags SGTIN-96
 	 *  Filtro, que é de três bits e especifica se o objeto marcado é um item, caso ou palete
@@ -51,8 +51,8 @@ public class TDTResource {
 		String length = binaryHeaders.get(origemBinary.substring(0, 8));
 		String filter = engine.bin2dec(origemBinary.substring(8, 11));
 		String partition = engine.bin2dec(origemBinary.substring(11, 14));
-		//gtin=00037000302414;serial=1041970
-		//30F40242201D8840000FE632
+		//gtin=80614141123458;serial=6789
+		//3074257bf7194e4000001a85
 		PartitionValue partitionValue = partitionValueMap.get(partition);
 		
 		String gs1companyprefixlength = partitionValue.getCompanyPrefix().getDigits();
