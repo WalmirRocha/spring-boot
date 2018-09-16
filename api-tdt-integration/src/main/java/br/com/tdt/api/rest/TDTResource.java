@@ -42,64 +42,194 @@ public class TDTResource {
 	@GetMapping("/{tagHexa}")
 	public ResponseEntity<?> converterTag(@PathVariable("tagHexa") String tagHexa) throws IOException, JAXBException {
 
+		gerarInit();
+		
 		Map<String, String> params = new HashMap<String, String>();
 		
 		String origemBinary = engine.hex2bin(tagHexa);
 
-		String DECIMA =engine.bin2dec(engine.hex2bin(tagHexa));
-		
-		String length = engine.bin2dec(origemBinary.substring(0, 8));
+		String length = binaryHeaders.get(origemBinary.substring(0, 8));
 		String filter = engine.bin2dec(origemBinary.substring(8, 11));
 		String partition = engine.bin2dec(origemBinary.substring(11, 14));
+		//gtin=00037000302414;serial=1041970
+		//30F40242201D8840000FE632
+		PartitionValue partitionValue = partitionValueMap.get(partition);
 		
-		int tamanho=  14 + 24;
-		String prefixCompany = engine.bin2dec(origemBinary.substring(14, tamanho));
-		
-		int tamanhoItem = tamanho+20;
-		String itemReferencia = engine.bin2dec(origemBinary.substring(tamanho, tamanhoItem));
-
-		int serialLength = Integer.parseInt(length);
-		String serial = engine.bin2dec(origemBinary.substring(tamanhoItem, origemBinary.length()-1));
-		
-		/*
-		String item = engine.bin2dec(orig.substring(20, 32));*/
+		String gs1companyprefixlength = partitionValue.getCompanyPrefix().getDigits();
 		
 		params.put("taglength", length);
 		params.put("filter",filter);
-		params.put("gs1companyprefixlength", "7");
+		params.put("gs1companyprefixlength", gs1companyprefixlength);
 		
-		
-		/*
-		 * String header = engine.bin2dec(orig.substring(0, 8));
-		
-		8 bits 3 bits 3 bits 20-40 bits 24-4 bits 38 bits*/
-		
-/*		params.put("taglength", "96");
-		params.put("filter", "3");
-		params.put("gs1companyprefixlength", "7");*/
-		
-/*		
-		
-		String value = 
-		
-		String s = engine.convert(orig, params, levelTypeList);*/
-		
-
-		
-		String s = engine.convert(origemBinary, params, LevelTypeList.TAG_ENCODING);
+		String s = engine.convert(origemBinary, params, LevelTypeList.PURE_IDENTITY);
 		
 		return ResponseEntity.ok(s);
 	}
+	
+	@GetMapping("/info/dec/{tagHexa}")
+	public ResponseEntity<?> infoDec(@PathVariable("tagHexa") String tagHexa) throws IOException, JAXBException {
 
-	public int hex2decimal(String s) {
-		String digits = "0123456789ABCDEF";
-		s = s.toUpperCase();
-		int val = 0;
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			int d = digits.indexOf(c);
-			val = 16 * val + d;
-		}
-		return val;
+		gerarInit();
+		
+		Map<String, String> result = new HashMap<String, String>();
+		
+		String origemBinary = engine.hex2bin(tagHexa);
+
+		String length = binaryHeaders.get(origemBinary.substring(0, 8));
+		String filter = engine.bin2dec(origemBinary.substring(8, 11));
+		String partition = engine.bin2dec(origemBinary.substring(11, 14));
+
+		PartitionValue partitionValue = partitionValueMap.get(partition);
+		
+		int tamanhoCompanyprefix = 14 + Integer.parseInt(partitionValue.getCompanyPrefix().getBits());
+		String companyPrefix = engine.bin2dec(origemBinary.substring(14,  tamanhoCompanyprefix));
+		
+		int tamanhoItemReference = tamanhoCompanyprefix + Integer.parseInt(partitionValue.getItemReference().getBits());
+		String itemReference = engine.bin2dec(origemBinary.substring(tamanhoCompanyprefix,  tamanhoItemReference));
+		
+		String serial = engine.bin2dec(origemBinary.substring(tamanhoItemReference,  origemBinary.length()));
+		
+		result.put("filter",filter);
+		result.put("Partition",filter);
+		result.put("Company prefix", companyPrefix);
+		result.put("Item Reference prefix", itemReference);
+		result.put("Serial", serial);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/info/bin/{tagHexa}")
+	public ResponseEntity<?> infoBin(@PathVariable("tagHexa") String tagHexa) throws IOException, JAXBException {
+
+		gerarInit();
+		
+		Map<String, String> result = new HashMap<String, String>();
+		
+		String origemBinary = engine.hex2bin(tagHexa);
+
+		String length = binaryHeaders.get(origemBinary.substring(0, 8));
+		String filter = origemBinary.substring(8, 11);
+		String partition = origemBinary.substring(11, 14);
+
+		PartitionValue partitionValue = partitionValueMap.get( engine.bin2dec(partition));
+		
+		int tamanhoCompanyprefix = 14 + Integer.parseInt(partitionValue.getCompanyPrefix().getBits());
+		String companyPrefix = origemBinary.substring(14,  tamanhoCompanyprefix);
+		
+		int tamanhoItemReference = tamanhoCompanyprefix + Integer.parseInt(partitionValue.getItemReference().getBits());
+		String itemReference = origemBinary.substring(tamanhoCompanyprefix,  tamanhoItemReference);
+		
+		String serial = origemBinary.substring(tamanhoItemReference,  origemBinary.length());
+		
+		result.put("filter",filter);
+		result.put("Partition",filter);
+		result.put("Company prefix", companyPrefix);
+		result.put("Item Reference prefix", itemReference);
+		result.put("Serial", serial);
+		
+		return ResponseEntity.ok(result);
+	}
+	
+	private static Map<String, PartitionValue> partitionValueMap = new HashMap<String, PartitionValue>();	
+	
+	private static Map<String, String> binaryHeaders = new HashMap<String, String>();	
+	static{
+		binaryHeaders.put("00110000", "96");
+	}
+
+	public void gerarInit() {
+		
+		partitionValueMap.put("0", new PartitionValue(new CompanyPrefix("40", "12"), new ItemReference("4",  "1")));
+		partitionValueMap.put("1", new PartitionValue(new CompanyPrefix("37", "11"), new ItemReference("7",  "2")));
+		partitionValueMap.put("2", new PartitionValue(new CompanyPrefix("34", "10"), new ItemReference("10", "3")));
+		partitionValueMap.put("3", new PartitionValue(new CompanyPrefix("30", "9"),  new ItemReference("14", "4")));
+		partitionValueMap.put("4", new PartitionValue(new CompanyPrefix("27", "8"),  new ItemReference("17", "5")));
+		partitionValueMap.put("5", new PartitionValue(new CompanyPrefix("24", "7"),  new ItemReference("20", "6")));
+		partitionValueMap.put("6", new PartitionValue(new CompanyPrefix("20", "6"),  new ItemReference("24", "7")));
+	}
+
+}
+	
+class PartitionValue {
+	
+	private CompanyPrefix companyPrefix;
+	private ItemReference itemReference;
+	
+	public PartitionValue(CompanyPrefix companyPrefix, ItemReference itemReference) {
+		this.companyPrefix = companyPrefix;
+		this.itemReference = itemReference;
+	}
+
+	public CompanyPrefix getCompanyPrefix() {
+		return companyPrefix;
+	}
+
+	public void setCompanyPrefix(CompanyPrefix companyPrefix) {
+		this.companyPrefix = companyPrefix;
+	}
+
+	public ItemReference getItemReference() {
+		return itemReference;
+	}
+
+	public void setItemReference(ItemReference itemReference) {
+		this.itemReference = itemReference;
 	}
 }
+
+class CompanyPrefix{
+	
+	private String bits;
+	private String digits;
+	
+	public CompanyPrefix(String bits, String digits) {
+		this.bits = bits;
+		this.digits = digits;
+	}
+
+	public String getBits() {
+		return bits;
+	}
+
+	public void setBits(String bits) {
+		this.bits = bits;
+	}
+
+	public String getDigits() {
+		return digits;
+	}
+
+	public void setDigits(String digits) {
+		this.digits = digits;
+	}
+	
+}
+
+class ItemReference{
+	
+	private String bits;
+	private String digits;
+	
+	public ItemReference(String bits, String digits) {
+		this.bits = bits;
+		this.digits = digits;
+	}
+	
+	public String getBits() {
+		return bits;
+	}
+
+	public void setBits(String bits) {
+		this.bits = bits;
+	}
+
+	public String getDigits() {
+		return digits;
+	}
+
+	public void setDigits(String digits) {
+		this.digits = digits;
+	}
+	
+}
+
