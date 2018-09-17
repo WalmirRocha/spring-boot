@@ -23,9 +23,9 @@ public class TDTResource {
 	private TDTEngine engine;
 
 	/**
-	 * 	Hexadeciaml : 3074257bf7194e4000001a85
-	 *  Binary: 001100000111010000100101011110111111011100011001010011100100000000000000000000000001101010000101
-   
+	 * 	Hexadeciaml : 3074257BF400B7800004CB2F
+	 *  Binary: 001100000111010000100101011110111111010000000000101101111000000000000000000001001100101100101111
+  
 	 *  Cabeçalho, que é de 8 bits e é comum para todas as tags SGTIN-96
 	 *  Filtro, que é de três bits e especifica se o objeto marcado é um item, caso ou palete
 	 *  Partição, que é de três bits e indica como os campos subseqüentes são divididos para obter os dados corretos para cada
@@ -61,7 +61,7 @@ public class TDTResource {
 		params.put("filter",filter);
 		params.put("gs1companyprefixlength", gs1companyprefixlength);
 		
-		String s = engine.convert(origemBinary, params, LevelTypeList.PURE_IDENTITY);
+		String s = engine.convert(origemBinary, params, LevelTypeList.TAG_ENCODING);
 		
 		return ResponseEntity.ok(s);
 	}
@@ -135,6 +135,7 @@ public class TDTResource {
 	private static Map<String, String> binaryHeaders = new HashMap<String, String>();	
 	static{
 		binaryHeaders.put("00110000", "96");
+		binaryHeaders.put("00110110", "198");
 	}
 
 	public void gerarInit() {
